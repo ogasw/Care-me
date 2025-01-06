@@ -1,0 +1,61 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #f4f4f4;
+      margin: 5px 0;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-Do App</h1>
+  <form id="todo-form">
+    <input type="text" id="todo-input" placeholder="Enter a new task" required>
+    <button type="submit">Add</button>
+  </form>
+  <ul id="todo-list"></ul>
+
+  <script>
+    const form = document.getElementById('todo-form');
+    const input = document.getElementById('todo-input');
+    const list = document.getElementById('todo-list');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const task = input.value;
+
+      // Send task to the backend
+      const response = await fetch('/api/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task }),
+      });
+
+      if (response.ok) {
+        const todo = await response.json();
+        const li = document.createElement('li');
+        li.textContent = todo.task;
+        list.appendChild(li);
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+  </html>
+  
